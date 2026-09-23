@@ -22,7 +22,7 @@ Report exact commands and outcomes, including unperformed checks. Deterministic 
 
 Do not commit installation records, generated review runs, local configuration, unpublished manuscripts, personal identifiers, or transcripts. Document behavior changes and limitations in the changelog. Proposed acceptance-rule changes must preserve original-source protection, truthful blocked states, evidence-linked closure, bounded budgets, and the distinction between model review and executed checks.
 
-Use concise pull-request descriptions: state the problem, resulting behavior, validation performed, and remaining limitations. Submission does not authorize publication of private evidence. Contributions are provided under the repository's MIT license.
+Contributions are provided under the repository's MIT license.
 
 ## Public-content check and CI
 

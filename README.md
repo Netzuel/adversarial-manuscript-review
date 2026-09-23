@@ -24,7 +24,7 @@ Use it when you want a sustained technical review and revision of an editable ma
   </picture>
 </p>
 
-*Revision mode shown; review-only skips student edits. Full-size: [light](docs/figures/review-workflow.svg) · [dark](docs/figures/review-workflow-dark.svg). [TikZ source and build instructions](docs/figures/README.md).*
+*Revision mode shown; review-only skips student edits. Full-size: [light](docs/figures/review-workflow.svg) · [dark](docs/figures/review-workflow-dark.svg).*
 
 The **host is the editor**. Reviewers, the student, and the final auditor are real native child-agent tasks. The local Python helper tracks files, evidence, and budgets; it does not call a model. Review-only mode skips student edits. Audit findings can require another bounded revision or a truthful stopped result.
 
@@ -102,7 +102,5 @@ Native inference can use a remote provider. Local records do not imply offline i
 Start at the [documentation index](docs/README.md) for installation, examples, architecture, recovery, and troubleshooting. The [verification guide](docs/verification.md) explains what the tests establish and what requires a live host.
 
 Contributions are welcome: a small synthetic failing case, a clearer review rule, or an accurate host-compatibility report can all help. Keep real manuscripts and private run histories out of issues and commits. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [changelog](CHANGELOG.md).
-
-The documentation takes inspiration from the purpose-first introductions and practical guides in [Superpowers](https://github.com/obra/superpowers) and [Task Observer](https://github.com/rebelytics/one-skill-to-rule-them-all). They are not runtime dependencies.
 
 Licensed under [MIT](LICENSE).

@@ -10,11 +10,3 @@
 - Deterministic synthetic tests and public installation, recovery, format, and privacy guidance.
 
 Native execution, permission behavior, and context isolation remain host-dependent. This changelog does not claim a completed live-host validation campaign or a released version.
-
-### Documentation
-
-- Reworked the project introduction around the review-to-revision workflow.
-- Added a documentation index, separate client guides, a fixture guide, and a verification guide.
-- Kept installation, scientific acceptance, and live-host verification claims distinct.
-- Replaced the wide Mermaid overview with a taller TikZ workflow, a scalable SVG, and reproducible build instructions.
-- Added transparent light and dark diagram palettes with automatic GitHub theme selection.
