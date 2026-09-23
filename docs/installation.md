@@ -8,18 +8,18 @@ python3 install.py install --host all
 python3 install.py diagnose --host all
 ```
 
-`--host` accepts `codex`, `claude`, or `all` (default). `--home PATH` selects a different user-home directory. Use the same home and host selection for later operations. A disposable home can test installation layout without modifying the current user's host configuration:
-
-```sh
-AMR_TEST_HOME=$(mktemp -d)
-python3 install.py install --host all --home "$AMR_TEST_HOME"
-python3 install.py diagnose --host all --home "$AMR_TEST_HOME"
-python3 install.py uninstall --host all --home "$AMR_TEST_HOME"
-```
-
-Installation links the skill into `.agents/skills/` for Codex or `.claude/skills/` for Claude Code. It copies role definitions into `.codex/agents/` or `.claude/agents/`. Wrapper asset links refer to the shared `skill/` tree. Records under the clone's `installation-records/` identify owned links and file hashes. Keep these records private: they contain local paths. Keep the clone and records until uninstall is complete.
+`--host` accepts `codex`, `claude`, or `all` (default). `--home PATH` selects a different user-home directory. Use the same home and host selection for later operations. Installation links the skill into `.agents/skills/` for Codex or `.claude/skills/` for Claude Code. It copies role definitions into `.codex/agents/` or `.claude/agents/`. Wrapper asset links refer to the shared `skill/` tree. Records under the clone's `installation-records/` identify owned links and file hashes. Keep these records private: they contain local paths. Keep the clone and records until uninstall is complete.
 
 The installer rejects unowned collisions and modified owned files. Inspect a conflict; do not overwrite another installation or delete its ownership record to bypass the check. `diagnose` checks installation records and paths. It does not test a live host or prove that the host loaded the skill. Follow your host's normal skill discovery/reload procedure.
+
+## Client invocation and discovery
+
+| Client | Skill location | Role definitions | Composer invocation |
+|---|---|---|---|
+| Codex | `.agents/skills/` | `.codex/agents/` | `$adversarial-manuscript-review /path/to/manuscript.tex` |
+| Claude Code | `.claude/skills/` | `.claude/agents/` | `/adversarial-manuscript-review /path/to/manuscript.tex` |
+
+Each client gets six role definitions. Claude web chat is not supported. Start a new conversation after installation and confirm discovery. Use `--review-only` for reports without edits. Test a copied [synthetic fixture](quickstart.md), then confirm real native child tasks, source changes, and a fresh auditor. A successful installation diagnosis does not prove live delegation or context independence. Keep existing routing and permissions; report unavailable capabilities rather than simulating reviewers. See [verification](../CONTRIBUTING.md#verification-limits).
 
 ## Python selection
 

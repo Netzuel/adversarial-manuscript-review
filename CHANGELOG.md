@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Shortened the README and merged duplicate client and verification guides.
+
 - Consolidated supporting documentation and clarified human-review responsibility and complete-project backups.
 
 - Continued student revision until all feedback has verified closure, including minor comments and audit findings.
