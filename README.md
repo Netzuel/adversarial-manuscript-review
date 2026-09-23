@@ -4,7 +4,11 @@
 
 One invocation starts specialist reviews, source revision, evidence checks, and a fresh final audit in **Codex** or **Claude Code**. You receive a revised working copy and a record of what changed, what was verified, and what still needs work. Your original stays intact by default.
 
-[Get started](#get-started) · [How it works](#how-it-works) · [Try an example](docs/quickstart.md) · [Documentation](docs/README.md) · [Contribute](CONTRIBUTING.md)
+> **Research support—not a substitute for peer review.** This skill aims to help improve research quality. Its AI agents simulate reviewer roles; their comments and proposed corrections are fallible feedback, not authoritative assessments. Use them to double-check caveats and areas that may need revision. Apply your own academic, scientific, and, where relevant, clinical judgment to every suggestion. The tool must never replace a real review process, a researcher's work, or professional responsibility.
+
+> **Back up the complete manuscript folder before use.** Keep a separate, untouched copy of the main LaTeX file, included sources, tables, figures, bibliography, data, and other dependencies. Use the default working-copy mode and omit `--in-place`. Inspect all proposed changes before accepting them; the generated candidate is not a substitute for your own recoverable backup.
+
+[Get started](#get-started) · [How it works](#how-it-works) · [Try an example](docs/quickstart.md) · [Guides](#guides-and-contributing) · [Contribute](CONTRIBUTING.md)
 
 ## Why this skill exists
 
@@ -65,7 +69,7 @@ Keep the clone in place: installed skills link to it. Finish active runs before 
 
 The [synthetic quickstart](docs/quickstart.md) copies a fixture into a temporary working directory. It contains a derivative sign error, a table/prose mismatch, a correct control statement, and an embedded instruction that must be treated as untrusted text.
 
-A second fixture lacks evidence for a broad claim. Its purpose is to exercise a blocker: the workflow must not invent measurements to make the review pass. [Explore the fixtures →](fixtures/README.md)
+A second fixture lacks evidence for a broad claim. Its purpose is to exercise a blocker: the workflow must not invent measurements to make the review pass. [Explore the fixtures →](docs/quickstart.md#fixtures)
 
 ## What you receive
 
@@ -87,19 +91,23 @@ Keep the full run directory for detailed evidence, native task provenance, and h
 
 ## A few working principles
 
-- **Protect the original.** Revise a separate candidate by default. Explicit `--in-place` promotion requires `PASS_INTERNAL`, conflict checks, and backups.
+- **Protect the original.** Back up the entire project and use the default separate candidate. `--in-place` is an advanced opt-in; it promotes changes only after `PASS_INTERNAL`, conflict checks, and helper backups.
 - **Make fixes inspectable.** A student assertion cannot close an issue. Each assigned comment needs a point-by-point response, actual student changes where required, and current verification evidence. No reported finding can disappear from the ledger.
 - **Give the audit a fresh context.** Unknown or compromised context separation blocks acceptance; a role label alone does not prove independence.
 - **Stop honestly.** Defaults allow four rounds, 32 dispatches, two audits, and 90 minutes checked at stage boundaries. Active model calls can exceed that wall limit.
 - **Keep the host in control.** Use native delegation and existing model routing. Preserve permissions; do not add an inference backend.
 
-Optional invocation controls: `--review-only`, `--resume`, `--max-rounds N`, and `--in-place`. Do not combine review-only with in-place promotion. Markdown and a bounded TeX dependency subset support revision. PDF-only input blocks faithful editable revision; DOCX revision is unsupported. [Formats](docs/formats.md) · [Recovery](docs/recovery.md)
+Optional invocation controls: `--review-only`, `--resume`, `--max-rounds N`, and `--in-place`. Do not combine review-only with in-place promotion. Markdown and a bounded TeX dependency subset support revision. PDF-only input blocks faithful editable revision; DOCX revision is unsupported. [Formats](docs/formats.md) · [Recovery](docs/troubleshooting.md#interruption-and-recovery)
 
 Native inference can use a remote provider. Local records do not imply offline inference, and hash guards are not an OS sandbox. Read [security and privacy](SECURITY.md) before supplying confidential work.
 
-## Explore and contribute
+## Guides and contributing
 
-Start at the [documentation index](docs/README.md) for installation, examples, architecture, recovery, and troubleshooting. The [verification guide](docs/verification.md) explains what the tests establish and what requires a live host.
+- [Installation and removal](docs/installation.md), [Codex](docs/README.codex.md), and [Claude Code](docs/README.claude.md)
+- [Quickstart and fixtures](docs/quickstart.md), [formats](docs/formats.md), and [workflow and outputs](docs/workflow.md)
+- [Troubleshooting and recovery](docs/troubleshooting.md) and [verification limits](docs/verification.md)
+
+`skill/` holds the shared instructions, templates, defaults, and local runtime. `adapters/` holds host entry points and agent definitions. `install.py` manages owned installation files; `tests/` and synthetic `fixtures/` check behavior. The detailed [editor protocol](skill/references/workflow.md), [record interface](skill/references/records.md), and [host adapter instructions](skill/references/hosts.md) support development; normal use needs only one skill invocation.
 
 Contributions are welcome: a small synthetic failing case, a clearer review rule, or an accurate host-compatibility report can all help. Keep real manuscripts and private run histories out of issues and commits. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [changelog](CHANGELOG.md).
 

@@ -35,4 +35,4 @@ Check that the skill is available in the new conversation. Then use the [synthet
 
 Codex tool names and agent-selection parameters vary by version. The [host adapter](../skill/references/hosts.md) requires the editor to inspect available capabilities and record limitations without inventing parameters or overriding model settings.
 
-[Shared installation and removal](installation.md) · [Troubleshooting](troubleshooting.md) · [Documentation index](README.md)
+[Shared installation and removal](installation.md) · [Troubleshooting](troubleshooting.md) · [Project overview](../README.md)

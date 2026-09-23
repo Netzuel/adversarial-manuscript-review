@@ -40,4 +40,4 @@ Stage the intended files, run `python scripts/check_public_content.py`, and insp
 
 The prepared GitHub Actions workflow runs only on manual dispatch. Its configuration alone is not a CI result. Report platform and host evidence separately; do not infer Linux or fresh-session compatibility from local unit tests.
 
-[Documentation index](README.md) · [Security and privacy](../SECURITY.md)
+[Project overview](../README.md) · [Security and privacy](../SECURITY.md)

@@ -42,4 +42,4 @@ python3 install.py uninstall --host all
 
 There is no safe live upgrade of an active installation. Skill links expose source changes immediately. Finish or safely interrupt runs, reconcile active child tasks, and uninstall before changing the clone revision. Then update the clone, reinstall, diagnose, and start a new host session. Do not update or move an active linked checkout. A changed copied agent file requires conflict resolution before uninstall can proceed.
 
-[Documentation index](README.md) · [Project overview](../README.md)
+[Project overview](../README.md)

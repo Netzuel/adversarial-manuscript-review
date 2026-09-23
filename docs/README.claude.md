@@ -35,4 +35,4 @@ Confirm the slash command is available in the new conversation. Use the [synthet
 
 The [host adapter](../skill/references/hosts.md) specifies fresh-task and context checks. Existing hooks and memory can affect audit independence; unknown or exposed context prevents acceptance.
 
-[Shared installation and removal](installation.md) · [Troubleshooting](troubleshooting.md) · [Documentation index](README.md)
+[Shared installation and removal](installation.md) · [Troubleshooting](troubleshooting.md) · [Project overview](../README.md)

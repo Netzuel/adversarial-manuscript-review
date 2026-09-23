@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Consolidated supporting documentation and clarified human-review responsibility and complete-project backups.
+
 - Continued student revision until all feedback has verified closure, including minor comments and audit findings.
 - Explicit report-to-ledger reconciliation, complete student responses, and student-source provenance for fixes.
 - Pending-work inspection and evidenced stopping instead of premature revision delivery.

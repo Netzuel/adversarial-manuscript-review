@@ -30,4 +30,16 @@ Invoke the skill on that printed path. Its unsupported universal claim cannot ac
 
 Add `--review-only` to request reports without student source edits. Running the helper's `init` command alone only creates local records; it does not launch agents or perform a review. Never edit shipped fixtures as part of a demonstration.
 
-[Documentation index](README.md) · [Project overview](../README.md)
+## Fixtures
+
+| Synthetic input | Purpose |
+|---|---|
+| [manuscript.md](../fixtures/manuscript.md) | Source corrections, a correct control, and untrusted embedded instructions |
+| [missing-evidence.md](../fixtures/missing-evidence.md) | A claim that rewriting cannot substantiate |
+| [latex/main.tex](../fixtures/latex/main.tex) | Included source and bibliography; copy the entire `latex/` directory |
+
+Tests use temporary copies and synthetic records, not transcripts of independent model runs. They do not establish scientific quality; see [verification](verification.md).
+
+For your own work, first back up the complete manuscript folder, including all sources, tables, figures, references, data, and dependencies. Keep that backup untouched and omit `--in-place` so the skill edits a separate candidate. Review every proposed change yourself.
+
+[Project overview](../README.md)
