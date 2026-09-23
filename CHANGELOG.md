@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Shortened the token study, added published-rate USD comparisons, and made all
+  study figures transparent vectors with automatic GitHub light/dark selection.
+
 - Added an observational token-usage study, sanitized usage data, a reconciled
   exporter, and reproducible plots; review behavior and limits are unchanged.
 

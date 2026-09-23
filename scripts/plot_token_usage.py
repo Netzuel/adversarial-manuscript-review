@@ -12,6 +12,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.text import Text
+from matplotlib.ticker import FuncFormatter
 
 COLORS = ["#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00"]
 LABEL_FS, TICK_FS, LEGEND_FS = 11, 10, 10
@@ -19,15 +21,31 @@ ROLES = ["editor", "math", "methods", "evidence", "communication", "student", "a
 
 
 def save(fig: Any, directory: Path, name: str) -> None:
-    for extension in ("png", "pdf", "eps", "svg"):
-        metadata = {"Creator": "AMR token study"} if extension == "pdf" else None
-        path = directory / f"{name}.{extension}"
-        fig.savefig(path, dpi=200, metadata=metadata)
-        if extension == "svg":
-            path.write_text(
-                "\n".join(line.rstrip() for line in path.read_text().splitlines())
-                + "\n"
-            )
+    for suffix, ink, grid in (
+        ("", "#24292f", "#d0d7de"),
+        ("-dark", "#e6edf3", "#484f58"),
+    ):
+        for text in fig.findobj(match=Text):
+            text.set_color(ink)
+        for ax in fig.axes:
+            ax.tick_params(colors=ink)
+            for spine in ax.spines.values():
+                spine.set_color(ink)
+            for line in ax.get_xgridlines() + ax.get_ygridlines():
+                line.set_color(grid)
+        for legend in fig.legends:
+            legend.set_frame_on(False)
+        for extension in ("png", "pdf", "eps", "svg"):
+            metadata = {"Creator": "AMR token study"} if extension == "pdf" else None
+            if extension == "svg":
+                metadata = {"Creator": "AMR token study", "Date": None}
+            path = directory / f"{name}{suffix}.{extension}"
+            fig.savefig(path, dpi=200, metadata=metadata, transparent=True)
+            if extension == "svg":
+                path.write_text(
+                    "\n".join(line.rstrip() for line in path.read_text().splitlines())
+                    + "\n"
+                )
     plt.close(fig)
 
 
@@ -97,6 +115,82 @@ def analyze(data: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def price_workload(
+    data: dict[str, Any], pricing: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Reprice fixed observed counts; do not imply actual cross-model billing."""
+    totals = data["totals"]
+    uncached = (
+        totals["input_tokens"]
+        - totals["cached_input_tokens"]
+        - totals["cache_write_input_tokens"]
+    )
+    if uncached < 0:
+        raise ValueError("cache partitions exceed input")
+    peak = max(c["input_tokens"] for s in data["sessions"] for c in s["calls"])
+    result = []
+    for rate in pricing["models"]:
+        if peak > rate["input_limit"]:
+            raise ValueError("workload exceeds verified context pricing range")
+        cost = (
+            uncached * rate["input"]
+            + totals["cached_input_tokens"] * rate["cache_read"]
+            + totals["cache_write_input_tokens"] * rate["cache_write"]
+            + totals["output_tokens"] * rate["output"]
+        ) / 1e6
+        no_cache = (
+            totals["input_tokens"] * rate["input"]
+            + totals["output_tokens"] * rate["output"]
+        ) / 1e6
+        result.append(
+            dict(model=rate["model"], recorded_cache_usd=cost, no_cache_usd=no_cache)
+        )
+    return result
+
+
+def plot_costs(
+    data: dict[str, Any], pricing: dict[str, Any], directory: Path
+) -> list[dict[str, Any]]:
+    costs = price_workload(data, pricing)
+    fig, ax = plt.subplots(figsize=(7.2, 4.4))
+    fig.subplots_adjust(left=0.22, right=0.96, bottom=0.17, top=0.79)
+    setup_axis(ax)
+    for key, label, marker, color, offset in (
+        ("recorded_cache_usd", "Recorded cache split", "o", COLORS[0], 6),
+        ("no_cache_usd", "No-cache scenario", "D", COLORS[1], -12),
+    ):
+        values = [r[key] for r in costs]
+        ax.scatter(
+            values,
+            range(len(costs)),
+            marker=marker,
+            color=color,
+            s=35,
+            label=label,
+            zorder=3,
+        )
+        for y, value in enumerate(values):
+            ax.annotate(
+                f"${value:.2f}",
+                (value, y),
+                xytext=(5, offset),
+                textcoords="offset points",
+                fontsize=9,
+            )
+    ax.set_yticks(range(len(costs)), [r["model"] for r in costs])
+    ax.invert_yaxis()
+    ax.set_ylim(len(costs) - 0.25, -0.75)
+    ax.set_xscale("log")
+    ax.set_xlim(0.05, 85)
+    ax.set_xticks([0.1, 0.5, 1, 5, 10, 50])
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda x, _: f"${x:g}"))
+    ax.set_xlabel("Estimated API cost in USD (log scale)")
+    ax.set_title("Fixed token workload at published model rates", fontsize=12, pad=12)
+    fig.legend(loc="upper center", ncol=2, bbox_to_anchor=(0.57, 0.99))
+    save(fig, directory, "model-costs")
+    return costs
+
+
 def plot(data: dict[str, Any], directory: Path) -> dict[str, Any]:
     plt.rcParams.update(
         {
@@ -110,7 +204,8 @@ def plot(data: dict[str, Any], directory: Path) -> dict[str, Any]:
             "lines.linewidth": 1.6,
             "patch.linewidth": 0.6,
             "legend.framealpha": 1.0,
-            "savefig.facecolor": "white",
+            "savefig.facecolor": "none",
+            "svg.hashsalt": "amr-token-study",
         }
     )
     directory.mkdir(parents=True, exist_ok=True)
@@ -217,7 +312,7 @@ def plot(data: dict[str, Any], directory: Path) -> dict[str, Any]:
             totals["input_tokens"] * (1 - h + ratio * h) + 6 * totals["output_tokens"]
         ) / 1e6
         ax.plot(h * 100, cost, color=color, label=f"Cache rate = {ratio:g} × input")
-    ax.axvline(summary["cache_read_fraction"] * 100, color="0.35", linestyle=":")
+    ax.axvline(summary["cache_read_fraction"] * 100, color="#888888", linestyle=":")
     ax.text(
         summary["cache_read_fraction"] * 100 - 2,
         4.5,
@@ -245,9 +340,15 @@ def main() -> None:
     parser.add_argument(
         "--summary", type=Path, default=Path("docs/data/token-usage/summary.json")
     )
+    parser.add_argument(
+        "--pricing", type=Path, default=Path("docs/data/token-usage/pricing.json")
+    )
     args = parser.parse_args()
     data = json.loads(args.data.read_text())
     result = plot(data, args.output)
+    pricing = json.loads(args.pricing.read_text())
+    result["model_costs"] = plot_costs(data, pricing, args.output)
+    result["pricing_verified_date"] = pricing["verified_date"]
     args.summary.parent.mkdir(parents=True, exist_ok=True)
     args.summary.write_text(json.dumps(result, indent=2) + "\n")
 

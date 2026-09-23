@@ -1,0 +1,25 @@
+{
+  "verified_date": "2026-09-23",
+  "currency": "USD",
+  "unit": "per million tokens",
+  "tier": "Standard synchronous API, short context, no regional surcharge",
+  "sources": {
+    "openai": "https://developers.openai.com/api/docs/pricing",
+    "anthropic": "https://platform.claude.com/docs/en/about-claude/pricing"
+  },
+  "models": [
+    {"model": "GPT-6 Astra", "provider": "openai", "input": 10.0, "cache_read": 1.0, "cache_write": 12.5, "output": 50.0, "input_limit": 272000},
+    {"model": "GPT-6 Sol", "provider": "openai", "input": 2.0, "cache_read": 0.2, "cache_write": 2.5, "output": 10.0, "input_limit": 272000},
+    {"model": "GPT-6 Luna", "provider": "openai", "input": 0.1, "cache_read": 0.01, "cache_write": 0.125, "output": 0.5, "input_limit": 272000},
+    {"model": "Claude Opus 5.5", "provider": "anthropic", "input": 4.0, "cache_read": 0.2, "cache_write": 5.0, "output": 20.0, "input_limit": 200000},
+    {"model": "Claude Sonnet 5", "provider": "anthropic", "input": 2.0, "cache_read": 0.2, "cache_write": 2.5, "output": 10.0, "input_limit": 200000},
+    {"model": "Claude Haiku 4.5", "provider": "anthropic", "input": 1.0, "cache_read": 0.1, "cache_write": 1.25, "output": 5.0, "input_limit": 200000}
+  ],
+  "assumptions": [
+    "Reprice the same recorded token counts and cache partitions for every model; these are estimates, not measured cross-model bills.",
+    "Zero cache writes were reported in the observed data. Anthropic cache-write rates use the five-minute option.",
+    "No-cache scenario converts all input to base-rate input and keeps output fixed.",
+    "Exclude subscriptions, credits, tool fees, taxes, regional uplifts, batch discounts, and fast-mode premiums.",
+    "Cross-provider tokenization and cache behavior differ; do not treat this as an equal-quality or equal-text benchmark."
+  ]
+}

@@ -475,5 +475,38 @@
       "modeled_responses": 171.0,
       "total_tokens": 11859892.0
     }
-  ]
+  ],
+  "model_costs": [
+    {
+      "model": "GPT-6 Astra",
+      "recorded_cache_usd": 8.690632,
+      "no_cache_usd": 46.73428
+    },
+    {
+      "model": "GPT-6 Sol",
+      "recorded_cache_usd": 1.7381263999999998,
+      "no_cache_usd": 9.346856
+    },
+    {
+      "model": "GPT-6 Luna",
+      "recorded_cache_usd": 0.08690632000000001,
+      "no_cache_usd": 0.46734280000000006
+    },
+    {
+      "model": "Claude Opus 5.5",
+      "recorded_cache_usd": 2.6308384,
+      "no_cache_usd": 18.693712
+    },
+    {
+      "model": "Claude Sonnet 5",
+      "recorded_cache_usd": 1.7381263999999998,
+      "no_cache_usd": 9.346856
+    },
+    {
+      "model": "Claude Haiku 4.5",
+      "recorded_cache_usd": 0.8690631999999999,
+      "no_cache_usd": 4.673428
+    }
+  ],
+  "pricing_verified_date": "2026-09-23"
 }

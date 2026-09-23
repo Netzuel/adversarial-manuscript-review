@@ -42,6 +42,13 @@ The host acts as editor. Four separate native agents examine validity, methods, 
 
 Default limits: four rounds, 32 child dispatches, two fresh audits, and 90 minutes checked at stage boundaries. Active model calls can exceed the wall limit. The helper records evidence and enforces structural gates; it cannot establish scientific truth or guarantee acceptance. [Workflow, budgets, and statuses](docs/workflow.md).
 
+## Token usage and cost
+
+A measured synthetic revision used **4.56 million tokens**, with **93.4% of input cached**.
+See the [concise study and model costs in USD](docs/token-usage.md) for transparent
+light/dark plots, pricing assumptions, and [reproducible data](docs/data/token-usage).
+This single fixture does not establish the cost of a typical paper.
+
 ## Inputs and results
 
 Markdown and a bounded TeX dependency subset support revision. PDF-only input needs verified corresponding editable source for faithful revision; DOCX revision is unsupported. [Format limits](docs/formats.md).
