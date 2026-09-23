@@ -16,18 +16,13 @@ Use it when you want a sustained technical review and revision of an editable ma
 
 ## How it works
 
-```mermaid
-flowchart LR
-    A[Manuscript] --> B[Four specialist reviews]
-    B --> C[Editor triage]
-    C --> D[Student revises working copy]
-    D --> E[Evidence and source checks]
-    E -->|More work, budget remains| B
-    E -->|Ready| F[Fresh final audit]
-    F --> G[Manuscript and review record]
-    C -->|Blocked or stopped| G
-    E -->|Blocked or stopped| G
-```
+<p align="center">
+  <a href="docs/figures/review-workflow.svg">
+    <img src="docs/figures/review-workflow.svg" width="640" alt="Vertical review workflow: manuscript, four specialist reviews, editor triage, student revision, evidence and source checks, fresh final audit, and delivery. Findings return to review within the remaining budget. Blockers or limits lead to delivery with a truthful status." />
+  </a>
+</p>
+
+*Revision mode shown; review-only skips student edits. Click the figure to enlarge it. [TikZ source and build instructions](docs/figures/README.md).*
 
 The **host is the editor**. Reviewers, the student, and the final auditor are real native child-agent tasks. The local Python helper tracks files, evidence, and budgets; it does not call a model. Review-only mode skips student edits. Audit findings can require another bounded revision or a truthful stopped result.
 

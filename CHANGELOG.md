@@ -16,3 +16,4 @@ Native execution, permission behavior, and context isolation remain host-depende
 - Reworked the project introduction around the review-to-revision workflow.
 - Added a documentation index, separate client guides, a fixture guide, and a verification guide.
 - Kept installation, scientific acceptance, and live-host verification claims distinct.
+- Replaced the wide Mermaid overview with a taller TikZ workflow, a scalable SVG, and reproducible build instructions.
