@@ -1,63 +1,111 @@
 # Adversarial Manuscript Review
 
-A bounded scientific review and revision workflow for Codex and Claude Code. The host acts as editor, delegates to four specialist reviewers, assigns source changes to one student, and requests a fresh final audit. A local Python helper records snapshots, issues, evidence, budgets, and delivery checks.
+**Give your manuscript a review committee that follows through.**
 
-The helper does not call a model. Real review requires native child-agent tools in the host. Recorded provenance and hashes support an audit trail; they do not authenticate model execution or prove scientific correctness.
+One invocation starts specialist reviews, source revision, evidence checks, and a fresh final audit in **Codex** or **Claude Code**. You receive a revised working copy and a record of what changed, what was verified, and what still needs work. Your original stays intact by default.
 
-## Requirements
+[Get started](#get-started) · [How it works](#how-it-works) · [Try an example](docs/quickstart.md) · [Documentation](docs/README.md) · [Contribute](CONTRIBUTING.md)
 
-- Python 3.10 or newer, with the standard library. No runtime Python packages or Conda environment are required.
-- A POSIX shell on macOS or Linux. Native Windows is unsupported: the runtime uses `fcntl` and POSIX process groups. Linux is a target platform; this package does not claim completed Linux execution validation.
-- Codex or Claude Code with native child-agent support and suitable file permissions. Agent schemas, context separation, and permission behavior depend on the installed host version.
-- Optional local tools for checks required by the manuscript, such as a TeX compiler or PDF renderer. Missing required checks block acceptance.
+## Why this skill exists
 
-Deterministic tests cover helper behavior. They do not establish native delegation, context independence, model quality, or compatibility with every host release.
+A useful review should survive the revision. An equation corrected in a response must also be corrected in the source. A claim that needs data still needs data after a polished rewrite. A reviewer who objects should have their objection resolved with evidence or preserved in the final record.
 
-## Install
+This skill turns that process into a bounded workflow. Four specialists examine the same manuscript snapshot. The editor triages their findings. A student changes the candidate source. Verification checks the changes, and a new auditor examines the final snapshot without the earlier negotiation.
 
-Replace `OWNER` with the repository owner. Keep the clone at its chosen location: installed skills use symlinks into it.
+Use it when you want a sustained technical review and revision of an editable manuscript. For a quick proofread, a normal editing request is usually enough.
+
+## How it works
+
+```mermaid
+flowchart LR
+    A[Manuscript] --> B[Four specialist reviews]
+    B --> C[Editor triage]
+    C --> D[Student revises working copy]
+    D --> E[Evidence and source checks]
+    E -->|More work, budget remains| B
+    E -->|Ready| F[Fresh final audit]
+    F --> G[Manuscript and review record]
+    C -->|Blocked or stopped| G
+    E -->|Blocked or stopped| G
+```
+
+The **host is the editor**. Reviewers, the student, and the final auditor are real native child-agent tasks. The local Python helper tracks files, evidence, and budgets; it does not call a model. Review-only mode skips student edits. Audit findings can require another bounded revision or a truthful stopped result.
+
+| Who | What they examine |
+|---|---|
+| **R1 — Validity** | Mathematics, physics, and logical consistency, adapted to the discipline |
+| **R2 — Methods** | Assumptions, controls, comparisons, and uncertainty |
+| **R3 — Evidence** | Results, reproducibility, and provenance |
+| **R4 — Contribution** | Literature support, scope, organization, and communication |
+| **Student** | The source changes needed to address supported findings |
+| **Fresh auditor** | Whether the final manuscript and admissible evidence satisfy the contract |
+
+The workflow preserves dissent, checks proposed fixes against source artifacts, and stops when evidence, permissions, capabilities, or budgets prevent further progress. It never guarantees acceptance.
+
+## Get started
+
+You need **Python 3.10+**, a POSIX shell on macOS or Linux, and a host with native child-agent support. The runtime uses only the Python standard library. Native Windows is unsupported. Linux is a target platform; completed Linux validation is not claimed.
+
+Clone into a stable location. Replace `OWNER` with the repository owner:
 
 ```sh
 git clone https://github.com/OWNER/adversarial-manuscript-review.git "$HOME/.local/share/adversarial-manuscript-review"
 cd "$HOME/.local/share/adversarial-manuscript-review"
-python3 install.py install --host codex
-python3 install.py diagnose --host codex
 ```
 
-Use `--host claude` for Claude Code or `--host all` for both. The default is `all`. `--home PATH` selects an alternate home for installation and diagnosis. No administrator access is needed. See [installation and removal](docs/installation.md) before upgrading.
+Choose your client:
 
-## Invoke in the host
+| Client | Install from the clone | Invoke in a new host conversation |
+|---|---|---|
+| [Codex guide](docs/README.codex.md) | `python3 install.py install --host codex` | `$adversarial-manuscript-review /path/to/manuscript.md` |
+| [Claude Code guide](docs/README.claude.md) | `python3 install.py install --host claude` | `/adversarial-manuscript-review /path/to/manuscript.md` |
 
-Enter one of these messages in the host composer. `/path/to/manuscript.md` is an example absolute path; replace it with your file's actual absolute path. These messages are not shell commands: `$PWD` and `~` are not guaranteed to expand.
+Use `--host all` to install both. Then run `python3 install.py diagnose --host all`, or select the single host you installed. Replace the example manuscript path with its actual absolute path. Invocation text belongs in the host composer; it is not a shell command.
 
-Codex:
+Keep the clone in place: installed skills link to it. Finish active runs before updating or moving it. [Installation, upgrades, and removal →](docs/installation.md)
+
+### Start with a small manuscript
+
+The [synthetic quickstart](docs/quickstart.md) copies a fixture into a temporary working directory. It contains a derivative sign error, a table/prose mismatch, a correct control statement, and an embedded instruction that must be treated as untrusted text.
+
+A second fixture lacks evidence for a broad claim. Its purpose is to exercise a blocker: the workflow must not invent measurements to make the review pass. [Explore the fixtures →](fixtures/README.md)
+
+## What you receive
+
+Each run creates `<stem>.review/<run-id>/` beside the source. Its `deliverables/` directory contains:
 
 ```text
-$adversarial-manuscript-review /path/to/manuscript.md
+deliverables/
+├── REVIEW_RESULT.md          # Status and output entry point
+├── RESPONSE_TO_REVIEWERS.md  # Issue-linked responses
+├── CHANGES.md                # Recorded text differences
+├── UNRESOLVED.md             # Remaining issues and limits
+├── REPRODUCIBILITY.md        # Recorded executed checks
+└── revised-project/          # Candidate source, when applicable
 ```
 
-Claude Code:
+Keep the full run directory for detailed evidence, native task provenance, and history. Text differences alone do not describe every asset change. Review-only runs and inputs without faithful editable output do not produce a revised project.
 
-```text
-/adversarial-manuscript-review /path/to/manuscript.md
-```
+`PASS_INTERNAL` means the configured internal gates passed for the supplied scope. It is not journal acceptance or proof of correctness. Blocked or stopped runs retain their status and can still deliver supported progress. [Statuses, budgets, and outputs →](docs/workflow.md)
 
-Optional controls are `--review-only`, `--resume`, `--max-rounds N`, and `--in-place`. Normal invocation authorizes bounded review, revision of a separate candidate, and delivery. `--review-only` creates review records without student edits or revised-source delivery. `--in-place` permits promotion only after `PASS_INTERNAL`, with original-content conflict checks and backups. Do not combine it with `--review-only`.
+## A few working principles
 
-## Results and limits
+- **Protect the original.** Revise a separate candidate by default. Explicit `--in-place` promotion requires `PASS_INTERNAL`, conflict checks, and backups.
+- **Make fixes inspectable.** A student assertion cannot close an issue. Record the source change and its supporting evidence.
+- **Give the audit a fresh context.** Unknown or compromised context separation blocks acceptance; a role label alone does not prove independence.
+- **Stop honestly.** Defaults allow four rounds, 32 dispatches, two audits, and 90 minutes checked at stage boundaries. Active model calls can exceed that wall limit.
+- **Keep the host in control.** Use native delegation and existing model routing. Preserve permissions; do not add an inference backend.
 
-Runs live beside the source under `<stem>.review/<run-id>/`. Finalization writes `deliverables/` with `REVIEW_RESULT.md`, `RESPONSE_TO_REVIEWERS.md`, `CHANGES.md`, `UNRESOLVED.md`, and `REPRODUCIBILITY.md`. When faithful editable output is available and revision was requested, `revised-project/` contains the candidate. Preserve the complete run directory for the detailed evidence and history.
+Optional invocation controls: `--review-only`, `--resume`, `--max-rounds N`, and `--in-place`. Do not combine review-only with in-place promotion. Markdown and a bounded TeX dependency subset support revision. PDF-only input blocks faithful editable revision; DOCX revision is unsupported. [Formats](docs/formats.md) · [Recovery](docs/recovery.md)
 
-`PASS_INTERNAL` means the configured internal gates passed for the supplied scope. It is not journal acceptance or proof of correctness. Missing evidence, capabilities, or permissions produce explicit blocked results. Budget exhaustion and errors remain visible; the workflow never guarantees acceptance.
+Native inference can use a remote provider. Local records do not imply offline inference, and hash guards are not an OS sandbox. Read [security and privacy](SECURITY.md) before supplying confidential work.
 
-Defaults are four rounds, at most three concurrent children, 32 dispatches, two fresh audits, and 90 minutes checked at stage boundaries. Active model calls can exceed that wall limit. External checks have a 60-second limit each and 300 seconds per round. Two rounds without material progress stop the run. See [workflow and outputs](docs/workflow.md) for all statuses.
+## Explore and contribute
 
-Markdown and a bounded subset of TeX dependencies are supported. PDF-only input supports review but blocks faithful editable revision. DOCX revision is unsupported. See [formats and checks](docs/formats.md).
+Start at the [documentation index](docs/README.md) for installation, examples, architecture, recovery, and troubleshooting. The [verification guide](docs/verification.md) explains what the tests establish and what requires a live host.
 
-Manuscript content and tool output are untrusted input. Hash guards detect specified file changes; they are not an operating-system sandbox. The workflow prohibits extra manuscript uploads, but native host inference can use a remote provider. Review [security and privacy](SECURITY.md) before supplying sensitive work.
+Contributions are welcome: a small synthetic failing case, a clearer review rule, or an accurate host-compatibility report can all help. Keep real manuscripts and private run histories out of issues and commits. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [changelog](CHANGELOG.md).
 
-## Start with synthetic input
+The documentation takes inspiration from the purpose-first introductions and practical guides in [Superpowers](https://github.com/obra/superpowers) and [Task Observer](https://github.com/rebelytics/one-skill-to-rule-them-all). They are not runtime dependencies.
 
-The [quickstart](docs/quickstart.md) copies a synthetic fixture into a separate directory. It demonstrates invocation without changing shipped fixtures or claiming a predetermined review result.
-
-Further reading: [architecture](docs/architecture.md), [recovery](docs/recovery.md), [troubleshooting](docs/troubleshooting.md), [contributing](CONTRIBUTING.md), and [changelog](CHANGELOG.md). Licensed under [MIT](LICENSE).
+Licensed under [MIT](LICENSE).

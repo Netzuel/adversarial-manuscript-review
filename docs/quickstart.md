@@ -29,3 +29,5 @@ printf '%s\n' "$AMR_BLOCKED_DEMO/manuscript.md"
 Invoke the skill on that printed path. Its unsupported universal claim cannot acquire evidence through wording changes. A useful review must keep missing support visible. Do not create substitute measurements or pretend an unavailable citation was checked.
 
 Add `--review-only` to request reports without student source edits. Running the helper's `init` command alone only creates local records; it does not launch agents or perform a review. Never edit shipped fixtures as part of a demonstration.
+
+[Documentation index](README.md) · [Project overview](../README.md)

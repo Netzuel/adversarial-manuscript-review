@@ -15,3 +15,5 @@ If all recorded native tasks have demonstrably ended, the helper's `recover` com
 Abandonment retains the task, guards, evidence, and budgets. It preserves an error status where present and otherwise marks interruption. It permanently prevents acceptance and new work in that run. Reconcile every active reservation, finalize the truthful terminal result, and release ownership. Do not use abandonment for ordinary resumable interruption.
 
 Guard failures remain visible. Preserve invalid evidence and the error result; do not delete protected reports or fabricate inactivity to make a run pass.
+
+[Documentation index](README.md) · [Project overview](../README.md)

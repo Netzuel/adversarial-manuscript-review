@@ -55,3 +55,5 @@ Finalization produces these files in `deliverables/`:
 - `revised-project/`: candidate files when revision was requested and faithful editable output is available.
 
 Blocked results can include supported candidate progress. They must retain their blocked status. Keep the full run directory: the summary documents do not replace native provenance, detailed evidence, and history.
+
+[Documentation index](README.md) · [Project overview](../README.md)

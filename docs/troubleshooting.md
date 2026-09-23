@@ -16,3 +16,5 @@
 The installer can inspect paths but cannot prove that the host discovered roles. The record helper can validate structured evidence but cannot authenticate a native task from a supplied ID alone. Report these distinctions when filing a synthetic reproduction.
 
 See [installation](installation.md), [formats](formats.md), and [recovery](recovery.md) for the detailed procedures.
+
+[Documentation index](README.md) · [Project overview](../README.md)

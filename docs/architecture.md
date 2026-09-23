@@ -21,3 +21,5 @@ Every review binds to an immutable snapshot. The contract freezes claims, requir
 Hash guards detect changes outside permitted paths and preserve invalidation evidence. Native permissions and context separation depend on the host. A read-only role description does not establish OS isolation. A fresh-context declaration alone does not prove independence. Unknown or exposed audit context blocks acceptance.
 
 The detailed editor protocol is in [the skill workflow](../skill/references/workflow.md), [record interface](../skill/references/records.md), and [host adapters](../skill/references/hosts.md).
+
+[Documentation index](README.md) · [Project overview](../README.md)

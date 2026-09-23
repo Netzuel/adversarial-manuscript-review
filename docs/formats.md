@@ -14,3 +14,5 @@ System TeX packages can be reported as uncopied and unverified; their absence fr
 For PDF input, the editor can inspect the supplied project for corresponding editable source. A matching basename is insufficient: establish correspondence from content and rendering, then initialize from the verified editable entry point. Initializing directly from a PDF sets an input blocker; do not clear it by editing state or invent a reconstructed source file.
 
 Checks run locally with recorded commands, hashes, outputs, exit status, and elapsed time. No compiler or renderer is installed automatically. Use safe options, no shell escape or automatic downloads, and disposable output directories. Compilation does not constitute visual inspection. Required unavailable rendering or checks block acceptance; only genuinely irrelevant checks may be excluded with a reason in the frozen contract.
+
+[Documentation index](README.md) · [Project overview](../README.md)
