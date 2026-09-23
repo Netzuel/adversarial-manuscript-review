@@ -1,0 +1,26 @@
+{
+  "classification": "RECORDED_GATES_OBSERVED",
+  "all_observed_gates": true,
+  "reported_status": "PASS_INTERNAL",
+  "gates": {
+    "original_preserved": true,
+    "delivered_editable_exists": true,
+    "author_metadata_preserved": true,
+    "corrected_derivative": true,
+    "corrected_table_prose": true,
+    "control_preserved": true,
+    "actual_source_changed": true,
+    "delivered_hashes_match": true,
+    "native_role_metadata_recorded": true,
+    "student_diff_recorded": true,
+    "subsequent_review_recorded": true,
+    "verified_issue_history_recorded": true
+  },
+  "problems": [],
+  "limitations": [
+    "Saved metadata is not independent proof of native model execution.",
+    "This fixture checker does not certify scientific acceptance or installation discovery.",
+    "Author checking compares literal author/affiliation/email commands only; it does not expand TeX.",
+    "Control preservation checks the fixture numerical initial value in prose, not verbatim wording; reference-section filtering is limited."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "study_date": "2026-09-23",
+  "run_date": "2026-09-21",
+  "sample": "shipped Markdown synthetic fixture",
+  "sample_words": 92,
+  "fixture_sha256": "4a8bb3145705f77e7ceba3dd9852565c6e2f56310fa6f5a66688a846c4f99fbb",
+  "saved_state_sha256": "e99a9f6e67ed7ccce749841134c21a57da66028367d67b84f9631bd9b90f90fc",
+  "analysis_base_commit": "8c877dd",
+  "rounds": 2,
+  "dispatches": 10,
+  "completed_children": 10,
+  "audit_attempts": 1,
+  "recorded_status": "PASS_INTERNAL",
+  "python_version": "3.10.20",
+  "limitations": [
+    "Single synthetic run, not ordinary-paper usage.",
+    "Source logs remain private; hashes permit custodian verification only.",
+    "Provider billing and subscription credits were not measured."
+  ],
+  "native_child_paths_match_completed_contexts": true
+}

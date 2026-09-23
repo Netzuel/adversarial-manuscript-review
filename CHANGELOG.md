@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added an observational token-usage study, sanitized usage data, a reconciled
+  exporter, and reproducible plots; review behavior and limits are unchanged.
+
 - Shortened the README and merged duplicate client and verification guides.
 
 - Consolidated supporting documentation and clarified human-review responsibility and complete-project backups.

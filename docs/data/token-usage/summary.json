@@ -1,0 +1,479 @@
+{
+  "totals": {
+    "input_tokens": 4526403,
+    "cached_input_tokens": 4227072,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 29405,
+    "reasoning_output_tokens": 1079,
+    "total_tokens": 4555808
+  },
+  "by_role": {
+    "editor": {
+      "sessions": 1,
+      "responses": 48,
+      "input_tokens": 3437896,
+      "cached_input_tokens": 3339008,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 16686,
+      "reasoning_output_tokens": 790,
+      "total_tokens": 3454582
+    },
+    "math": {
+      "sessions": 2,
+      "responses": 10,
+      "input_tokens": 280674,
+      "cached_input_tokens": 239616,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2771,
+      "reasoning_output_tokens": 25,
+      "total_tokens": 283445
+    },
+    "methods": {
+      "sessions": 2,
+      "responses": 9,
+      "input_tokens": 232024,
+      "cached_input_tokens": 212096,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2545,
+      "reasoning_output_tokens": 10,
+      "total_tokens": 234569
+    },
+    "evidence": {
+      "sessions": 2,
+      "responses": 8,
+      "input_tokens": 219723,
+      "cached_input_tokens": 175744,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2797,
+      "reasoning_output_tokens": 61,
+      "total_tokens": 222520
+    },
+    "communication": {
+      "sessions": 2,
+      "responses": 4,
+      "input_tokens": 103199,
+      "cached_input_tokens": 49408,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 2034,
+      "reasoning_output_tokens": 65,
+      "total_tokens": 105233
+    },
+    "student": {
+      "sessions": 1,
+      "responses": 6,
+      "input_tokens": 200886,
+      "cached_input_tokens": 174208,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1499,
+      "reasoning_output_tokens": 43,
+      "total_tokens": 202385
+    },
+    "auditor": {
+      "sessions": 1,
+      "responses": 2,
+      "input_tokens": 52001,
+      "cached_input_tokens": 36992,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 1073,
+      "reasoning_output_tokens": 85,
+      "total_tokens": 53074
+    }
+  },
+  "by_phase": {
+    "all": 3454582,
+    "initial": 491401,
+    "revision": 202385,
+    "verification": 354366,
+    "audit": 53074
+  },
+  "responses": 87,
+  "cache_read_fraction": 0.9338700067139404,
+  "editor_total_fraction": 0.7582808581924436,
+  "uncached_input_tokens": 299331,
+  "sensitivity_scenarios": [
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2271766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2271766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2271766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2316766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2361766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2451766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2361766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2451766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2631766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2451766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2631766.0
+    },
+    {
+      "rounds": 1,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 5,
+      "modeled_responses": 45.0,
+      "total_tokens": 2991766.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4555808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4555808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4555808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4642808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4729808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4903808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4729808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4903808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 5251808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 4903808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 5251808.0
+    },
+    {
+      "rounds": 2,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 10,
+      "modeled_responses": 87.0,
+      "total_tokens": 5947808.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 6839850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 6839850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 6839850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 6968850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 7097850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 7355850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 7097850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 7355850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 7871850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 7355850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 7871850.0
+    },
+    {
+      "rounds": 3,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 15,
+      "modeled_responses": 129.0,
+      "total_tokens": 8903850.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9123892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9123892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 0,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9123892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9294892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9465892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 4000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9807892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9465892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9807892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 8000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 10491892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 0.25,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 9807892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 0.5,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 10491892.0
+    },
+    {
+      "rounds": 4,
+      "added_manuscript_tokens": 16000,
+      "exposure_fraction": 1.0,
+      "child_dispatches": 20,
+      "modeled_responses": 171.0,
+      "total_tokens": 11859892.0
+    }
+  ]
+}

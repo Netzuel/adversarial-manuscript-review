@@ -16,3 +16,6 @@ build/
 dist/
 .work/
 legacy-runtime.json
+# Reproducible binary figure exports; reviewed SVG/EPS sources are tracked.
+docs/figures/token-usage/*.png
+docs/figures/token-usage/*.pdf

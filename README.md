@@ -54,6 +54,7 @@ Native inference may send manuscript content to the host's configured provider. 
 
 ## Further guidance
 
+- [Token usage study and reproducible plots](docs/token-usage.md)
 - [Troubleshooting and recovery](docs/troubleshooting.md)
 - [Contributing and verification](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 - Agent protocol: [workflow](skill/references/workflow.md), [record interface](skill/references/records.md), and [host adapters](skill/references/hosts.md)
