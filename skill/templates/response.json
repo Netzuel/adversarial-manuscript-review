@@ -1,0 +1,7 @@
+{
+  "snapshot_hash": "PRE_REVISION_HASH",
+  "plan": [{"issue_id": "I001", "action": "Specific supported correction"}],
+  "responses": [{"issue_id": "I001", "response": "What actually changed, or evidence-based rebuttal/blocker", "changed_files": [], "evidence": []}],
+  "checks_requested": [],
+  "blockers": []
+}

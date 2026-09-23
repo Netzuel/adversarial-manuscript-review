@@ -1,0 +1,12 @@
+{
+  "snapshot_hash": "CURRENT_HASH",
+  "verdict": "revise",
+  "coverage": ["Exact inspected source locations, equations, tables, figures and references"],
+  "findings": [],
+  "uninspected": [],
+  "independent": false,
+  "negotiation_exposed": false,
+  "context_evidence": [],
+  "context_id": "ACTUAL_NATIVE_TASK_ID",
+  "limitations": []
+}

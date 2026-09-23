@@ -1,0 +1,10 @@
+{
+  "max_rounds": 4,
+  "max_concurrent": 3,
+  "max_dispatches": 32,
+  "max_audits": 2,
+  "wall_seconds": 5400,
+  "check_seconds": 60,
+  "round_check_seconds": 300,
+  "no_progress_rounds": 2
+}

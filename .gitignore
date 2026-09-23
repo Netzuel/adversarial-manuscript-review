@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+.DS_Store
+*.review/
+installation-records/
+audit/
+live/
+migration*/
+*.log
+.env
+.env.*
+build/
+dist/
+.work/

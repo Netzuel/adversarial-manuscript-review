@@ -1,0 +1,18 @@
+{
+  "research_question": "Describe the actual supplied question",
+  "contributions": [],
+  "claims": ["C1"],
+  "claim_locations": {"C1": "Exact source location and wording"},
+  "discipline": "Infer from source; record uncertainty",
+  "manuscript_language": "Source language",
+  "report_language": "User language or manuscript language",
+  "assumptions": [],
+  "required_areas": ["R1", "R2", "R3", "R4"],
+  "required_checks": [],
+  "check_exclusions": {},
+  "acceptance_conditions": ["All material claims covered and supported", "No unresolved major or critical issues", "Current specialist verdicts and fresh independent audit", "Actual output equals reviewed source"],
+  "allowed_actions": ["Student edits candidate sources", "Editor executes inspected cheap local checks"],
+  "available_evidence": [],
+  "out_of_scope": ["New extensive experiments", "External publication"],
+  "limitations": []
+}

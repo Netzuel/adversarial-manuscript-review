@@ -1,0 +1,6 @@
+#!/bin/sh
+# Preserve each caller argument; never evaluate manuscript paths as shell code.
+amr_script_dir=$(CDPATH= cd -P -- "$(dirname -- "$0")" && pwd) || exit 1
+amr_python=${AMR_PYTHON:-python3}
+"$amr_python" -c 'import sys; sys.exit("amr requires Python 3.10 or newer") if sys.version_info < (3, 10) else None' || exit $?
+exec "$amr_python" "$amr_script_dir/amr.py" "$@"

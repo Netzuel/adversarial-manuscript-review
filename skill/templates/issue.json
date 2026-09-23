@@ -1,0 +1,13 @@
+{
+  "id": "I001", "originating_reviewer": "R1", "round": 1,
+  "snapshot_hash": "CURRENT_HASH", "location": "file:line/section",
+  "affected_claim_ids": ["C1"], "category": "mathematics",
+  "severity": "major", "confidence": 0.9,
+  "allegation_type": "demonstrated_error", "problem": "Concrete problem",
+  "supporting_evidence": ["Exact evidence location"],
+  "scientific_consequence": "Why it matters",
+  "resolution_condition": "Observable closure condition",
+  "verification_method": "Specific inspection/check",
+  "student_response": "", "related_changes": [], "verification_artifacts": [],
+  "status": "open", "closure_author": null, "closure_reason": null, "history": []
+}
