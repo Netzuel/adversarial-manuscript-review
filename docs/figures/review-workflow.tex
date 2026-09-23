@@ -2,14 +2,22 @@
 \documentclass[tikz,border=8pt]{standalone}
 \usepackage{fontspec}
 \setmainfont{lmsans10-regular.otf}[BoldFont=lmsans10-bold.otf]
-\usetikzlibrary{arrows.meta,positioning,calc,backgrounds}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\ifdefined\AMRDarkTheme
+  \definecolor{ink}{HTML}{E6EDF3}
+  \definecolor{blueFill}{HTML}{1C2D42}
+  \definecolor{greenFill}{HTML}{1D3228}
+  \definecolor{lavenderFill}{HTML}{302941}
+  \definecolor{loopBlue}{HTML}{79C0FF}
+  \definecolor{stopAmber}{HTML}{E3B341}
+\else
 \definecolor{ink}{HTML}{25354A}
 \definecolor{blueFill}{HTML}{E7F0FB}
 \definecolor{greenFill}{HTML}{E9F4ED}
 \definecolor{lavenderFill}{HTML}{EFEDF8}
-\definecolor{muted}{HTML}{596579}
 \definecolor{loopBlue}{HTML}{28649C}
 \definecolor{stopAmber}{HTML}{94602C}
+\fi
 \tikzset{
   stage/.style={rounded corners=5pt,draw=ink,line width=1.1pt,
     fill=blueFill,text=ink,align=center,text width=6.4cm,
@@ -70,9 +78,5 @@
   \coordinate (rightGuard) at ($(stopTop)+(3mm,0)$);
   \path[use as bounding box] (leftGuard |- input.north)
     rectangle (rightGuard |- delivery.south);
-  \begin{scope}[on background layer]
-    \fill[white] (current bounding box.south west)
-      rectangle (current bounding box.north east);
-  \end{scope}
 \end{tikzpicture}
 \end{document}

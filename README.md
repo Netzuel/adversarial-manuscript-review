@@ -17,12 +17,14 @@ Use it when you want a sustained technical review and revision of an editable ma
 ## How it works
 
 <p align="center">
-  <a href="docs/figures/review-workflow.svg">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/figures/review-workflow-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="docs/figures/review-workflow.svg" />
     <img src="docs/figures/review-workflow.svg" width="640" alt="Vertical review workflow: manuscript, four specialist reviews, editor triage, student revision, evidence and source checks, fresh final audit, and delivery. Findings return to review within the remaining budget. Blockers or limits lead to delivery with a truthful status." />
-  </a>
+  </picture>
 </p>
 
-*Revision mode shown; review-only skips student edits. Click the figure to enlarge it. [TikZ source and build instructions](docs/figures/README.md).*
+*Revision mode shown; review-only skips student edits. Full-size: [light](docs/figures/review-workflow.svg) · [dark](docs/figures/review-workflow-dark.svg). [TikZ source and build instructions](docs/figures/README.md).*
 
 The **host is the editor**. Reviewers, the student, and the final auditor are real native child-agent tasks. The local Python helper tracks files, evidence, and budgets; it does not call a model. Review-only mode skips student edits. Audit findings can require another bounded revision or a truthful stopped result.
 
