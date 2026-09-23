@@ -16,7 +16,7 @@ The editor does not simulate reviewers or silently take over scientific edits. C
 
 `skill/` contains the common workflow, role instructions, templates, defaults, and runtime. `adapters/` contains host entry points and agent definitions. `install.py` installs owned user-level links and agent files. `tests/` exercises deterministic behavior. Fixtures are synthetic.
 
-Every review binds to an immutable snapshot. The contract freezes claims, required areas, checks, and acceptance conditions. Issue records retain evidence, provenance, status history, and closure reasons. A student assertion cannot close an issue. Current coverage and artifact hashes must support acceptance.
+Every review binds to an immutable snapshot. The contract freezes claims, required areas, checks, and acceptance conditions. Issue records retain evidence, provenance, status history, and closure reasons. Every report finding remains accountable in the ledger across rounds. A student reservation freezes its assigned issue IDs and cannot complete with omitted responses. A student assertion cannot close an issue. Acceptance requires verified closure at every severity, and current student provenance for claimed source fixes. Current coverage and artifact hashes must support acceptance.
 
 Hash guards detect changes outside permitted paths and preserve invalidation evidence. Native permissions and context separation depend on the host. A read-only role description does not establish OS isolation. A fresh-context declaration alone does not prove independence. Unknown or exposed audit context blocks acceptance.
 

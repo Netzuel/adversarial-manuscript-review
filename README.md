@@ -10,7 +10,7 @@ One invocation starts specialist reviews, source revision, evidence checks, and 
 
 A useful review should survive the revision. An equation corrected in a response must also be corrected in the source. A claim that needs data still needs data after a polished rewrite. A reviewer who objects should have their objection resolved with evidence or preserved in the final record.
 
-This skill turns that process into a bounded workflow. Four specialists examine the same manuscript snapshot. The editor triages their findings. A student changes the candidate source. Verification checks the changes, and a new auditor examines the final snapshot without the earlier negotiation.
+This skill turns that process into a bounded workflow. Four specialists examine the same manuscript snapshot. The editor triages their findings. A student changes the candidate source. Verification checks the changes, and a new auditor examines the final snapshot without the earlier negotiation. The loop continues automatically for every unfinished comment, including minor corrections, suggestions, and new audit findings. Every item needs a verified fix or an evidence-based rebuttal; a partial revision is not completion.
 
 Use it when you want a sustained technical review and revision of an editable manuscript. For a quick proofread, a normal editing request is usually enough.
 
@@ -37,7 +37,7 @@ The **host is the editor**. Reviewers, the student, and the final auditor are re
 | **Student** | The source changes needed to address supported findings |
 | **Fresh auditor** | Whether the final manuscript and admissible evidence satisfy the contract |
 
-The workflow preserves dissent, checks proposed fixes against source artifacts, and stops when evidence, permissions, capabilities, or budgets prevent further progress. It never guarantees acceptance.
+The workflow preserves dissent and checks proposed fixes against source artifacts. It keeps revising while permitted work remains; genuine evidence, permission, capability, or budget limits produce explicit non-acceptance results after independent supported work is complete. It never guarantees acceptance.
 
 ## Get started
 
@@ -88,7 +88,7 @@ Keep the full run directory for detailed evidence, native task provenance, and h
 ## A few working principles
 
 - **Protect the original.** Revise a separate candidate by default. Explicit `--in-place` promotion requires `PASS_INTERNAL`, conflict checks, and backups.
-- **Make fixes inspectable.** A student assertion cannot close an issue. Record the source change and its supporting evidence.
+- **Make fixes inspectable.** A student assertion cannot close an issue. Each assigned comment needs a point-by-point response, actual student changes where required, and current verification evidence. No reported finding can disappear from the ledger.
 - **Give the audit a fresh context.** Unknown or compromised context separation blocks acceptance; a role label alone does not prove independence.
 - **Stop honestly.** Defaults allow four rounds, 32 dispatches, two audits, and 90 minutes checked at stage boundaries. Active model calls can exceed that wall limit.
 - **Keep the host in control.** Use native delegation and existing model routing. Preserve permissions; do not add an inference backend.

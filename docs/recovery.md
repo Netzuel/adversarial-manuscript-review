@@ -16,4 +16,6 @@ Abandonment retains the task, guards, evidence, and budgets. It preserves an err
 
 Guard failures remain visible. Preserve invalid evidence and the error result; do not delete protected reports or fabricate inactivity to make a run pass.
 
+New runs use the complete-feedback policy. If an updated installation identifies a legacy run, keep its original helper and workflow until that run finishes. Do not rewrite its policy, ledger, or budget to adopt a newer release.
+
 [Documentation index](README.md) · [Project overview](../README.md)

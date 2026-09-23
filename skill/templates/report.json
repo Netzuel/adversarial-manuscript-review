@@ -2,7 +2,7 @@
   "snapshot_hash": "CURRENT_HASH",
   "verdict": "revise",
   "coverage": ["Exact inspected source locations, equations, tables, figures and references"],
-  "findings": [],
+  "findings": [{"id": "ASSIGNED_PREFIX-001", "problem": "Concrete feedback requiring a ledger entry"}],
   "uninspected": [],
   "independent": false,
   "negotiation_exposed": false,

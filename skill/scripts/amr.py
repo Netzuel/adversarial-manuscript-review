@@ -53,6 +53,7 @@ STATUSES = {
     "accepted_minor_limitation",
     "reopened",
 }
+CLOSED = {"resolved_verified", "rebutted_verified"}
 
 
 class ReviewError(RuntimeError):
@@ -234,6 +235,7 @@ def initialize(
         path / "state.json",
         {
             "schema_version": SCHEMA,
+            "feedback_policy": 2,
             "source": str(source),
             "entrypoint": inputs.get("entrypoint"),
             "stage": "INGEST",
@@ -442,11 +444,29 @@ class Run:
             raise ReviewError("invalid state transition")
         if self.state["active"]:
             raise ReviewError("active children must complete before transition")
-        if self.state["stage"] == "RE_REVIEW":
+        missing = self.missing_findings()
+        if missing:
+            raise ReviewError(
+                "report findings missing from ledger: " + ", ".join(missing)
+            )
+        repeated = self.redisposition_ids()
+        if repeated:
+            raise ReviewError(
+                "reported findings need new disposition: " + ", ".join(repeated)
+            )
+        if target == "FRESH_AUDIT":
+            errors = self.acceptance_errors(preaudit=True)
+            if errors:
+                raise ReviewError(
+                    "fresh audit requires closed verified candidate: "
+                    + "; ".join(errors)
+                )
+        if (
+            self.state["stage"] == "RE_REVIEW"
+            and self.state.get("progress_round") != self.state["round"]
+        ):
             substantive = [
-                (i["id"], i["status"])
-                for i in read(self.path / "issues.json")
-                if i["severity"] in ("major", "critical")
+                (i["id"], i["status"]) for i in read(self.path / "issues.json")
             ]
             self.progress(
                 digest(
@@ -462,6 +482,7 @@ class Run:
                     }
                 )
             )
+            self.state["progress_round"] = self.state["round"]
             if self.state["status"] == "STOPPED_NO_PROGRESS":
                 raise ReviewError("two rounds without material progress")
         if target == "STUDENT_REVISION":
@@ -536,6 +557,13 @@ class Run:
             "protected": protected,
             "candidate_before": manifest(self.path / "candidate"),
             "stage": self.state["stage"],
+            "assigned_issue_ids": [
+                i["id"]
+                for i in read(self.path / "issues.json")
+                if i["status"] not in CLOSED
+            ]
+            if role == "student"
+            else [],
         }
         b["dispatches"] += 1
         if role == "auditor":
@@ -587,6 +615,51 @@ class Run:
             raise ReviewError("unauthorized write detected; stage invalidated")
         if data.get("snapshot_hash") != task["snapshot_hash"]:
             raise ReviewError("stale snapshot report")
+        if task["role"] == "student":
+            responses = data.get("responses")
+            if not isinstance(responses, list) or any(
+                not isinstance(r, dict)
+                or not isinstance(r.get("id"), str)
+                or not isinstance(r.get("response"), str)
+                or not r["response"].strip()
+                or not isinstance(r.get("changed_files"), list)
+                or not all(isinstance(p, str) and p for p in r["changed_files"])
+                or not isinstance(r.get("evidence"), list)
+                or not all(isinstance(p, str) and p for p in r["evidence"])
+                for r in responses
+            ):
+                raise ReviewError("student needs structured responses")
+            ids = [r["id"] for r in responses]
+            if len(ids) != len(set(ids)) or set(ids) != set(task["assigned_issue_ids"]):
+                raise ReviewError(
+                    "student responses must address exactly every assigned issue"
+                )
+            after = manifest(self.path / "candidate")
+            changed = {
+                p
+                for p in set(after) | set(task["candidate_before"])
+                if after.get(p) != task["candidate_before"].get(p)
+            }
+            for response in responses:
+                if not set(response["changed_files"]).issubset(changed):
+                    raise ReviewError("student response claims an unobserved diff")
+                if response["evidence"]:
+                    self.artifacts(response["evidence"])
+        else:
+            findings = data.get("findings")
+            if not isinstance(findings, list) or any(
+                not isinstance(f, dict)
+                or not isinstance(f.get("id"), str)
+                or not f["id"].strip()
+                or not isinstance(f.get("problem"), str)
+                or not f["problem"].strip()
+                for f in findings
+            ):
+                raise ReviewError(
+                    "review report needs explicit findings with id and problem"
+                )
+            if len({f["id"] for f in findings}) != len(findings):
+                raise ReviewError("finding IDs must be unique")
         if task["role"] != "student" and data.get("verdict") not in (
             "pass",
             "revise",
@@ -637,6 +710,7 @@ class Run:
         task["result_hash"] = digest(data)
         task["result_path"] = "rounds/results/" + key + ".json"
         task["candidate_after"] = manifest(self.path / "candidate")
+        task["completion_sequence"] = self.state["sequence"] + 1
         self.state["completed"][key] = task
         del self.state["active"][key]
         if task["role"] != "student":
@@ -683,6 +757,8 @@ class Run:
         for item in data:
             if any(k not in item for k in ISSUE_FIELDS):
                 raise ReviewError("missing issue fields")
+            if not isinstance(item["id"], str) or not item["id"].strip():
+                raise ReviewError("issue needs stable nonempty id")
             if (
                 item["severity"] not in ("critical", "major", "minor", "suggestion")
                 or item["status"] not in STATUSES
@@ -728,6 +804,10 @@ class Run:
         return values
 
     def close(self, key, data):
+        if self.state["active"]:
+            raise ReviewError("complete active tasks before issue closure")
+        if self.state["snapshot"] != digest(manifest(self.path / "candidate")):
+            raise ReviewError("freeze candidate before issue closure")
         items = read(self.path / "issues.json")
         item = next((i for i in items if i["id"] == key), None)
         if not item:
@@ -750,6 +830,34 @@ class Run:
         ):
             raise ReviewError("closure needs current inspected evidence and reason")
         artifacts = self.artifacts(data.get("artifacts", []))
+        responses = []
+        for task in sorted(
+            self.state["completed"].values(),
+            key=lambda t: t.get("completion_sequence", 0),
+        ):
+            if task["role"] == "student":
+                report = read(self.path / task["result_path"])
+                if digest(report) != task["result_hash"]:
+                    raise ReviewError("student report changed")
+                responses.extend(
+                    (task, r) for r in report["responses"] if r["id"] == key
+                )
+        if (
+            status == "rebutted_verified"
+            and not responses
+            and not (
+                self.state["review_only"]
+                or (
+                    data["author"] == "editor"
+                    and not any(
+                        t["role"] == "student" for t in self.state["completed"].values()
+                    )
+                )
+            )
+        ):
+            raise ReviewError(
+                "rebuttal needs student point response or pre-student editor dismissal"
+            )
         if status == "accepted_minor_limitation" and item["severity"] in (
             "major",
             "critical",
@@ -769,15 +877,47 @@ class Run:
                 changed
             ):
                 raise ReviewError("false fix: no matching actual diff")
+            if not any(
+                set(response["changed_files"]).intersection(
+                    changed, data.get("related_changes", [])
+                )
+                for _, response in responses
+            ):
+                raise ReviewError(
+                    "fix needs completed student response and matching observed diff"
+                )
+            latest = {}
+            for task in sorted(
+                self.state["completed"].values(),
+                key=lambda t: t.get("completion_sequence", 0),
+            ):
+                if task["role"] == "student":
+                    for name in set(task["candidate_before"]) | set(
+                        task["candidate_after"]
+                    ):
+                        if task["candidate_before"].get(name) != task[
+                            "candidate_after"
+                        ].get(name):
+                            latest[name] = task["candidate_after"].get(name)
+            if any(
+                name not in latest or latest[name] != now.get(name)
+                for name in data.get("related_changes", [])
+            ):
+                raise ReviewError(
+                    "fix contains changes without completed student provenance"
+                )
         item["history"].append(data)
         item.update(
-            student_response=data.get("student_response", item["student_response"]),
+            student_response=responses[-1][1]["response"]
+            if responses
+            else data.get("student_response", item["student_response"]),
             status=status,
             closure_author=data["author"],
             closure_reason=data["reason"],
             verification_artifacts=artifacts,
             related_changes=data.get("related_changes", []),
             verification_snapshot=self.state["snapshot"],
+            verification_sequence=self.state["sequence"] + 1,
         )
         atomic(self.path / "issues.json", items)
         self.event("issue_status", {"id": key, "status": status})
@@ -794,8 +934,49 @@ class Run:
         atomic(self.path / "claims-evidence.json", data.get("claims", {}))
         self.event("evidence_maps", {"claims": list(data.get("claims", {}))})
 
-    def acceptance_errors(self):
-        errors = []
+    def missing_findings(self):
+        ledger = {i["id"] for i in read(self.path / "issues.json")}
+        missing = set()
+        for task in self.state["completed"].values():
+            report = read(self.path / task["result_path"])
+            if digest(report) != task["result_hash"]:
+                raise ReviewError("completed report changed")
+            if task["role"] != "student":
+                missing.update(
+                    f["id"] for f in report["findings"] if f["id"] not in ledger
+                )
+        return sorted(missing)
+
+    def redisposition_ids(self):
+        ledger = {i["id"]: i for i in read(self.path / "issues.json")}
+        repeated = set()
+        for task in self.state["completed"].values():
+            if task["role"] == "student":
+                continue
+            report = read(self.path / task["result_path"])
+            if digest(report) != task["result_hash"]:
+                raise ReviewError("completed report changed")
+            for finding in report["findings"]:
+                item = ledger.get(finding["id"])
+                if (
+                    item
+                    and item["status"]
+                    in (CLOSED | {"blocked", "accepted_minor_limitation"})
+                    and task["completion_sequence"]
+                    > item.get("verification_sequence", 0)
+                ):
+                    repeated.add(item["id"])
+        return sorted(repeated)
+
+    def acceptance_errors(self, preaudit=False):
+        errors = [
+            "report finding absent from ledger " + key
+            for key in self.missing_findings()
+        ]
+        errors.extend(
+            "reported finding needs new disposition " + key
+            for key in self.redisposition_ids()
+        )
         if self.state.get("abandoned"):
             errors.append(
                 "run has abandoned tasks; acceptance and replay are prohibited"
@@ -855,11 +1036,8 @@ class Run:
                 except ReviewError as e:
                     errors.append(str(e))
         for item in read(self.path / "issues.json"):
-            if item["severity"] in ("critical", "major") and item["status"] not in (
-                "resolved_verified",
-                "rebutted_verified",
-            ):
-                errors.append("unresolved substantive issue " + item["id"])
+            if item["status"] not in CLOSED:
+                errors.append("unresolved issue " + item["id"])
             if item["status"] in ("resolved_verified", "rebutted_verified"):
                 if item.get("verification_snapshot") != snapshot:
                     errors.append("stale issue closure " + item["id"])
@@ -873,6 +1051,8 @@ class Run:
                     errors.append(str(e))
         contexts = []
         for role in ["R1", "R2", "R3", "R4", "auditor"]:
+            if preaudit and role == "auditor":
+                continue
             verdict = self.state["verdicts"].get(role, {})
             if (
                 verdict.get("snapshot_hash") != snapshot
@@ -1061,11 +1241,136 @@ class Run:
             self.state["status"] = "STOPPED_NO_PROGRESS"
         self.event("progress", {"fingerprint": fingerprint})
 
+    def pending(self):
+        items = read(self.path / "issues.json")
+        repeated = self.redisposition_ids()
+        unresolved = sorted(
+            {i["id"] for i in items if i["status"] not in CLOSED} | set(repeated)
+        )
+        blocked = [
+            i["id"]
+            for i in items
+            if i["status"] == "blocked" and i["id"] not in repeated
+        ]
+        stale = [
+            i["id"]
+            for i in items
+            if i["status"] in CLOSED
+            and i.get("verification_snapshot") != self.state["snapshot"]
+        ]
+        missing = self.missing_findings()
+        return {
+            "unresolved_ids": unresolved,
+            "missing_finding_ids": missing,
+            "redisposition_ids": repeated,
+            "blocked_ids": blocked,
+            "actionable_ids": [i for i in unresolved if i not in blocked],
+            "stale_closure_ids": stale,
+            "verification_errors": self.acceptance_errors(),
+            "next_action": "complete active tasks"
+            if self.state["active"]
+            else "register report findings"
+            if missing
+            else "reopen or redispose repeated findings"
+            if repeated
+            else "continue student corrections"
+            if set(unresolved) - set(blocked)
+            else "revalidate closures"
+            if stale
+            else "inspect gates and blockers",
+        }
+
+    def stop_proof(self, data):
+        if self.state["active"]:
+            raise ReviewError("complete active tasks before stop proof")
+        if data.get("status") not in {
+            "BLOCKED_PERMISSION",
+            "BLOCKED_CAPABILITY",
+            "BLOCKED_EVIDENCE",
+            "INTERRUPTED",
+            "ERROR",
+        }:
+            raise ReviewError("invalid stop proof status")
+        if (
+            data.get("inspected") is not True
+            or not isinstance(data.get("reason"), str)
+            or not data["reason"].strip()
+        ):
+            raise ReviewError("stop proof requires inspected reason")
+        hashes = self.artifacts(data.get("artifacts", []))
+        if any((self.path / p).stat().st_size == 0 for p in hashes):
+            raise ReviewError("stop proof evidence must not be empty")
+        ids = data.get("blocked_issue_ids", [])
+        if not isinstance(ids, list) or not all(isinstance(i, str) for i in ids):
+            raise ReviewError("blocked_issue_ids must be a list")
+        self.state["stop_proof"] = dict(
+            data, artifact_hashes=hashes, snapshot_hash=self.state["snapshot"]
+        )
+        self.event("stop_proof", self.state["stop_proof"])
+
+    def stopping_errors(self, status):
+        current = self.state["status"]
+        if current and current != "INTERRUPTED" and status != current:
+            return ["cannot relabel recorded terminal condition " + current]
+        if status == "REVISION_REQUIRED":
+            return (
+                []
+                if self.state["review_only"]
+                else ["revision runs must continue corrections or prove a blocker"]
+            )
+        if status == "BLOCKED_INPUT":
+            return (
+                []
+                if read(self.path / "input-manifest.json").get("blocked_input")
+                else ["no blocked input"]
+            )
+        if status in {"STOPPED_BUDGET", "STOPPED_NO_PROGRESS"}:
+            valid = current == status
+            if status == "STOPPED_BUDGET":
+                b = self.state["budget"]
+                valid = (
+                    valid
+                    or time.time() - self.state["created"] > b["wall_seconds"]
+                    or b["dispatches"] >= b["max_dispatches"]
+                )
+            return [] if valid else ["no recorded budget/progress exhaustion"]
+        if status in {"ERROR", "INTERRUPTED"} and current == status:
+            return []
+        proof = self.state.get("stop_proof", {})
+        if proof.get("status") != status:
+            return ["stop requires inspected stop-proof evidence"]
+        if proof.get("snapshot_hash") != self.state["snapshot"] or self.state[
+            "snapshot"
+        ] != digest(manifest(self.path / "candidate")):
+            return ["stop proof requires current frozen candidate"]
+        if self.artifacts(list(proof["artifact_hashes"])) != proof["artifact_hashes"]:
+            return ["stop proof evidence changed"]
+        if status.startswith("BLOCKED_"):
+            pending = self.pending()
+            if pending["actionable_ids"] or pending["missing_finding_ids"]:
+                return ["independent actionable corrections remain"]
+            if not set(proof.get("blocked_issue_ids", [])).issubset(
+                pending["blocked_ids"]
+            ):
+                return ["stop proof names issues without inspected blocked closures"]
+            for item in read(self.path / "issues.json"):
+                if item["status"] == "blocked" and (
+                    item.get("verification_snapshot") != self.state["snapshot"]
+                    or self.artifacts(list(item["verification_artifacts"]))
+                    != item["verification_artifacts"]
+                ):
+                    return ["blocked issue evidence is stale or changed"]
+        return []
+
     def finalize(self, status):
         if status not in TERMINAL:
             raise ReviewError("invalid terminal status")
         if self.state["active"]:
             raise ReviewError("active work must finish or be explicitly reconciled")
+        if status != "PASS_INTERNAL":
+            errors = self.stopping_errors(status)
+            if errors:
+                raise ReviewError("; ".join(errors))
         if status == "PASS_INTERNAL":
             self.boundary()
             errors = self.acceptance_errors()
@@ -1174,6 +1479,9 @@ def release(path, session):
 
 
 def main():
+    from amr_compat import route_legacy
+
+    route_legacy(sys.argv[1:])
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", type=Path)
     parser.add_argument("--session")
@@ -1183,9 +1491,9 @@ def main():
     for name in ("resume", "review-only", "in-place"):
         init.add_argument("--" + name, action="store_true")
     init.add_argument("--max-rounds", type=int)
-    for command in ("status", "snapshot", "gate", "release"):
+    for command in ("status", "snapshot", "gate", "release", "pending"):
         sub.add_parser(command)
-    for command in ("contract", "issues", "check", "maps"):
+    for command in ("contract", "issues", "check", "maps", "stop-proof"):
         sub.add_parser(command).add_argument("json", type=Path)
     sub.add_parser("transition").add_argument("stage")
     d = sub.add_parser("dispatch")
@@ -1196,7 +1504,6 @@ def main():
         d.add_argument("id")
         d.add_argument("json", type=Path)
     sub.add_parser("finalize").add_argument("status")
-    sub.add_parser("progress").add_argument("fingerprint")
     sub.add_parser("recover").add_argument("json", type=Path)
     args = parser.parse_args()
     try:
@@ -1224,6 +1531,10 @@ def main():
                     result = {"snapshot_hash": run.snapshot()}
                 elif args.command == "gate":
                     result = {"errors": run.acceptance_errors()}
+                elif args.command == "pending":
+                    result = run.pending()
+                elif args.command == "stop-proof":
+                    result = run.stop_proof(read(args.json))
                 elif args.command in ("contract", "issues", "check", "maps"):
                     result = getattr(run, args.command)(read(args.json))
                 elif args.command == "transition":
@@ -1234,8 +1545,6 @@ def main():
                     result = getattr(run, args.command)(args.id, read(args.json))
                 elif args.command == "finalize":
                     result = run.finalize(args.status)
-                else:
-                    result = run.progress(args.fingerprint)
         print(json.dumps(result if result is not None else {"ok": True}, indent=2))
     except (ReviewError, OSError, ValueError, KeyError) as error:
         parser.exit(2, "amr: " + str(error) + "\n")

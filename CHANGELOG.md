@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Continued student revision until all feedback has verified closure, including minor comments and audit findings.
+- Explicit report-to-ledger reconciliation, complete student responses, and student-source provenance for fixes.
+- Pending-work inspection and evidenced stopping instead of premature revision delivery.
+- Preserved original-runtime routing for legacy runs during supported local updates.
+
 - Provider-neutral manuscript review instructions with Codex and Claude Code adapters.
 - Four specialist roles, one student writer, and a fresh final auditor.
 - Local snapshot, issue, coverage, evidence, and bounded-run records.

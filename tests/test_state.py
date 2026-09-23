@@ -123,7 +123,7 @@ def test_false_fix_missing_artifact_and_valid_rebuttal(tmp_path):
     with a.Run(Path(info["run"]), info["session"]) as r:
         r.issues([issue(r.state["snapshot"])])
         record = {
-            "author": "R1",
+            "author": "editor",
             "status": "resolved_verified",
             "reason": "fixed",
             "snapshot_hash": r.state["snapshot"],
@@ -168,6 +168,7 @@ def test_real_revision_maps_and_final_gate(tmp_path):
                 {
                     "snapshot_hash": r.state["snapshot"],
                     "verdict": "revise",
+                    "findings": [],
                     "coverage": ["entire paper"],
                     "independent": True,
                     "negotiation_exposed": False,
@@ -188,7 +189,20 @@ def test_real_revision_maps_and_final_gate(tmp_path):
         original = r.state["snapshot"]
         source = r.path / "candidate" / "paper é.md"
         source.write_text(source.read_text().replace("Value: 3", "Value: 4"))
-        r.complete(d, {"snapshot_hash": original, "response": "I1 corrected"})
+        r.complete(
+            d,
+            {
+                "snapshot_hash": original,
+                "responses": [
+                    {
+                        "id": "I1",
+                        "response": "I1 corrected",
+                        "changed_files": ["paper é.md"],
+                        "evidence": [],
+                    }
+                ],
+            },
+        )
         r.transition("VALIDATION")
         r.snapshot()
         r.transition("RE_REVIEW")
@@ -234,6 +248,7 @@ def test_real_revision_maps_and_final_gate(tmp_path):
                 {
                     "snapshot_hash": r.state["snapshot"],
                     "verdict": "pass",
+                    "findings": [],
                     "coverage": ["entire paper"],
                     "independent": True,
                     "negotiation_exposed": False,
@@ -327,6 +342,7 @@ def test_context_attestation_alone_is_not_verified(tmp_path):
                 "snapshot_hash": r.state["snapshot"],
                 "context_id": "native1",
                 "verdict": "pass",
+                "findings": [],
                 "coverage": ["all"],
                 "independent": True,
                 "negotiation_exposed": False,
@@ -480,6 +496,7 @@ def test_complete_retry_after_missing_context_transcript(tmp_path):
         report = {
             "snapshot_hash": r.state["snapshot"],
             "verdict": "pass",
+            "findings": [],
             "context_record": {
                 "host": "codex",
                 "context_id": "native-context",
@@ -635,6 +652,27 @@ def test_missing_major_claim_evidence_delivers_blocked_result(tmp_path):
         )
         with pytest.raises(a.ReviewError, match="missing current claim evidence: C1"):
             r.finalize("PASS_INTERNAL")
+        (r.path / "evidence/missing.txt").write_text(concern["problem"])
+        r.close(
+            "I1",
+            {
+                "author": "editor",
+                "status": "blocked",
+                "reason": concern["problem"],
+                "snapshot_hash": r.state["snapshot"],
+                "inspected": True,
+                "artifacts": ["evidence/missing.txt"],
+            },
+        )
+        r.stop_proof(
+            {
+                "status": "BLOCKED_EVIDENCE",
+                "reason": concern["problem"],
+                "inspected": True,
+                "artifacts": ["evidence/missing.txt"],
+                "blocked_issue_ids": ["I1"],
+            }
+        )
         result = r.finalize("BLOCKED_EVIDENCE")
         assert result["status"] == "BLOCKED_EVIDENCE"
         assert r.state["status"] == "BLOCKED_EVIDENCE"
@@ -664,7 +702,14 @@ def test_resume_after_completed_student_revision_never_replays_edit(tmp_path):
         reservation = r.dispatch("student", "student-before-interruption")
         report = {
             "snapshot_hash": r.state["snapshot"],
-            "response": "I1: changed Value: 3 to Value: 4.",
+            "responses": [
+                {
+                    "id": "I1",
+                    "response": "I1: changed Value: 3 to Value: 4.",
+                    "changed_files": ["paper é.md"],
+                    "evidence": [],
+                }
+            ],
         }
         candidate = r.path / "candidate" / "paper é.md"
         candidate.write_text(candidate.read_text().replace("Value: 3", "Value: 4"))
@@ -707,6 +752,10 @@ def test_check_rejects_active_task_before_any_side_effect(tmp_path, role):
     a, info = setup_run(tmp_path)
     with a.Run(Path(info["run"]), info["session"]) as r:
         if role in ("student", "auditor"):
+            if role == "auditor":
+                from test_iteration import passing_reviews
+
+                passing_reviews(r, tmp_path, "initial")
             r.transition("EDITORIAL_TRIAGE")
             r.transition("STUDENT_REVISION" if role == "student" else "FRESH_AUDIT")
         reservation = r.dispatch(role, "active-" + role)

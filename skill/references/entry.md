@@ -5,7 +5,7 @@ description: Use when asked for iterative specialist committee review and revisi
 
 # Adversarial manuscript review
 
-Act as editor. Run the complete bounded workflow in [references/workflow.md](workflow.md), using the current host's [adapter](hosts.md). One supplied manuscript path authorizes review, student revision of a working copy, verification, and delivery. Do not stop after a plan or critique, or request routine round-by-round approvals.
+Act as editor. Run the complete bounded workflow in [references/workflow.md](workflow.md), using the current host's [adapter](hosts.md). One supplied manuscript path authorizes review, student revision of a working copy, verification, and delivery. Continue the reviewer–student loop until every feedback item has a verified correction or evidence-based rebuttal. Do not stop after a plan, critique, student response, or partial fix, or request routine round-by-round approvals. Use `pending` after each completed wave; unfinished minor comments and suggestions count too. Genuine blockers, explicit interruption, and frozen resource limits remain truthful non-acceptance outcomes.
 
 Parse the path and optional `--review-only`, `--resume`, `--max-rounds N`, `--in-place` as data. Never interpolate raw arguments into shell code. Use Python 3.10 or newer. Use the executable `../scripts/amr` launcher and run `--help` once; it forwards literal arguments to `python3`, or the single executable selected by `AMR_PYTHON`. Read [references/records.md](records.md) before constructing records.
 

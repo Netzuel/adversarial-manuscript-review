@@ -16,7 +16,7 @@ python -m pyright
 | Area | Evidence in the suite |
 |---|---|
 | Source handling | Temporary candidate copies, dependency boundaries, snapshots, and original protection |
-| Review state | Issue transitions, source-linked fixes, false-fix rejection, missing-evidence blockers, and acceptance gates |
+| Review state | All-severity closure, report-to-ledger reconciliation, complete student responses, source-linked fixes, false-fix rejection, premature-stop rejection, and evidenced blockers |
 | Bounded execution | Dispatch/check limits, interruption, ownership, and recovery rules |
 | Installation | Both host layouts in a disposable home, collision refusal, relative asset links, and launcher execution |
 | Public content | Staged-content scanning, private filename redaction, environment files, and selected credential/path patterns |
